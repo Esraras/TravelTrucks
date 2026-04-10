@@ -1,0 +1,204 @@
+.catalog-container {
+  display: flex;
+  flex-direction: column; 
+  padding: 20px;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sidebar { width: 100%; }
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filter-card {
+  border: 1px solid #ddd;
+  padding: 15px 5px;
+  border-radius: 10px;
+  background: white;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.filter-card.active { border-color: var(--primary-red); }
+
+.search-button {
+  width: 100%;
+  background: var(--primary-red);
+  color: white;
+  padding: 15px;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+}
+
+/* --- CAMPER CARDS --- */
+.camper-card {
+  display: flex;
+  flex-direction: column; 
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background: white;
+}
+
+.camper-image {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+}
+
+.camper-details { padding: 20px; }
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.show-more {
+  background: var(--primary-red);
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 50px;
+  margin-top: 15px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.3s ease;
+}
+
+.show-more:hover {
+  background: #c0392b;
+}
+
+.campers-wrapper {
+  width: 100%;
+}
+
+/* --- PAGINATION --- */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  background: var(--primary-red, #e74c3c);
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #c0392b;
+  transform: scale(1.05);
+}
+
+.pagination-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.pagination-pages {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pagination-page {
+  background: white;
+  color: #333;
+  border: 2px solid #ddd;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  min-width: 40px;
+  text-align: center;
+}
+
+.pagination-page:hover {
+  border-color: var(--primary-red, #e74c3c);
+  color: var(--primary-red, #e74c3c);
+}
+
+.pagination-page.active {
+  background: var(--primary-red, #e74c3c);
+  color: white;
+  border-color: var(--primary-red, #e74c3c);
+}
+
+.load-more-btn {
+  display: block;
+  margin: 30px auto; 
+  padding: 12px 32px;
+  background-color: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: 50px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.load-more-btn:hover {
+  border-color: var(--primary-red);
+  color: var(--primary-red);
+  transform: translateY(-2px);
+}
+
+
+@media (min-width: 769px) {
+  .catalog-container {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+ .load-more-btn {
+    margin: 50px auto;
+    padding: 16px 40px;
+  }
+  .sidebar {
+    width: 30%;
+    position: sticky;
+    top: 20px;
+  }
+
+  .camper-list {
+    width: 70%;
+  }
+
+  .camper-card {
+    flex-direction: row; 
+    height: 320px;
+  }
+
+  .camper-image {
+    width: 40%;
+    height: 100%;
+  }
+
+  .camper-details {
+    width: 60%;
+  }
+}
