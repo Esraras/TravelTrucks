@@ -1,13 +1,15 @@
 .catalog-container {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   padding: 20px;
   gap: 30px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.sidebar { width: 100%; }
+.sidebar {
+  width: 100%;
+}
 
 .filter-grid {
   display: grid;
@@ -23,56 +25,114 @@
   background: white;
   font-size: 0.8rem;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: inherit;
 }
 
-.filter-card.active { border-color: var(--primary-red); }
-
-.search-button {
-  width: 100%;
-  background: var(--primary-red);
-  color: white;
-  padding: 15px;
-  border: none;
-  border-radius: 50px;
-  font-weight: 600;
+.filter-card.active {
+  border-color: var(--primary-red);
 }
 
 /* --- CAMPER CARDS --- */
 .camper-card {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   border: 1px solid #ddd;
   border-radius: 20px;
   overflow: hidden;
   margin-bottom: 20px;
   background: white;
+  width: 100%;
 }
 
 .camper-image {
-  height: 200px;
+  height: 240px;
   background-size: cover;
   background-position: center;
 }
 
-.camper-details { padding: 20px; }
+.camper-details {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
 .card-header {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.card-header h2 {
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.card-header p {
+  margin: 0;
+  font-weight: 700;
+  color: #202020;
+  display: flex;
+  gap: 10px;
   align-items: center;
 }
 
+.card-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: #6b6b6b;
+  font-size: 0.95rem;
+  align-items: center;
+}
+
+.card-info span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.description {
+  margin: 0;
+  line-height: 1.6;
+  color: #5e5e5e;
+  max-width: 100%;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+.tag {
+  background: #f8f8f8;
+  color: #383838;
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
 .show-more {
-  background: var(--primary-red);
+  background: var(--primary-red, #e74c3c);
   color: white;
   border: none;
-  padding: 10px 25px;
+  padding: 12px 26px;
   border-radius: 50px;
-  margin-top: 15px;
+  margin-top: 10px;
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
   transition: background 0.3s ease;
+  align-self: flex-start;
+  min-width: 140px;
 }
 
 .show-more:hover {
@@ -148,13 +208,38 @@
   border-color: var(--primary-red, #e74c3c);
 }
 
+.location-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: #f7f7f7; /* Görseldeki açık gri */
+  border-radius: 10px;
+  padding: 18px;
+  gap: 8px;
+}
+
+.location-icon {
+  width: 18px;
+  height: 20px;
+  color: #101828;
+}
+
+.location-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  color: #101828;
+  width: 100%;
+}
+
 .load-more-btn {
   display: block;
-  margin: 30px auto; 
+  margin: 30px auto;
   padding: 12px 32px;
-  background-color: transparent;
-  color: var(--text-main);
-  border: 1px solid var(--border-color);
+  background-color: #e44848;
+  color: white;
+  border: 1px solid #e44848;
   border-radius: 50px;
   font-weight: 500;
   font-size: 1rem;
@@ -168,13 +253,68 @@
   transform: translateY(-2px);
 }
 
+.container {
+  display: flex;
+  flex-direction: column; /* Mobilde alt alta */
+  padding: 20px;
+  gap: 30px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.card {
+  padding: 15px 5px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.card.active {
+  border-color: #e44848;
+}
+
+.searchBtn {
+  width: 100%;
+  padding: 15px;
+  background: #e44848;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filter-grid svg {
+  width: 32px;
+  height: 32px;
+  color: currentColor;
+  display: flex;
+  flex-direction: column;
+}
 
 @media (min-width: 769px) {
+  .container {
+    flex-direction: row;
+    margin: 0 auto;
+  }
+  .sidebar {
+    width: 360px;
+  }
+  .list {
+    flex: 1;
+  }
   .catalog-container {
     flex-direction: row;
     align-items: flex-start;
   }
- .load-more-btn {
+  .load-more-btn {
     margin: 50px auto;
     padding: 16px 40px;
   }
@@ -184,18 +324,14 @@
     top: 20px;
   }
 
-  .camper-list {
-    width: 70%;
-  }
-
   .camper-card {
-    flex-direction: row; 
-    height: 320px;
+    flex-direction: row;
   }
 
   .camper-image {
     width: 40%;
-    height: 100%;
+    background-size: cover;
+    background-position: center;
   }
 
   .camper-details {

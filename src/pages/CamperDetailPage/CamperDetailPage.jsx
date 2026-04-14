@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Navigation from '../../components/Navigation/Navigation';
 import styles from './CamperDetailPage.module.css';
-import { fetchCamperById } from '../../store/campersSlice';
+import { fetchCamperById } from '../../store/Camper/operations.js';
 
 const CamperDetailPage = () => {
     const { id } = useParams();

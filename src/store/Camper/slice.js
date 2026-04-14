@@ -1,31 +1,5 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const API_URL = "https://66b1f8e71ca8ad33d4f5f63e.mockapi.io/campers/";
-
-export const fetchCampers = createAsyncThunk(
-  "campers/fetchCampers",
-  async ({ page = 1, limit = 6 }, { rejectWithValue }) => {
-    try {
-      const response = await axios.get(`${API_URL}?page=${page}&limit=${limit}`);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  },
-);
-
-export const fetchCamperById = createAsyncThunk(
-  "campers/fetchCamperById",
-  async (id, { rejectWithValue }) => {
-    try {
-      const response = await axios.get(`${API_URL}${id}`);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  },
-);
+import { createSlice } from "@reduxjs/toolkit";
+import { fetchCampers, fetchCamperById } from "./operations";
 
 const campersSlice = createSlice({
   name: "campers",
@@ -48,6 +22,7 @@ const campersSlice = createSlice({
       state.currentPage = 1;
     },
     clearFilters: (state) => {
+      state.items = [];
       state.filters = {
         location: "",
         equipment: [],
@@ -117,4 +92,5 @@ export const {
   nextPage,
   prevPage,
 } = campersSlice.actions;
+
 export default campersSlice.reducer;
