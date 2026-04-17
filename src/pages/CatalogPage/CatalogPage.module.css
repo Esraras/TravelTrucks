@@ -330,6 +330,7 @@
 
   .camper-image {
     width: 40%;
+    height: 330px;
     background-size: cover;
     background-position: center;
   }
