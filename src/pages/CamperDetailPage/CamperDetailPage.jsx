@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Navigation from '../../components/Navigation/Navigation';
 import styles from './CamperDetailPage.module.css';
 import { fetchCamperById } from '../../store/Camper/operations.js';
+import { ThreeDots } from 'react-loader-spinner';
 
 const CamperDetailPage = () => {
   const { id } = useParams();
@@ -36,7 +37,15 @@ const CamperDetailPage = () => {
       <>
         <Navigation />
         <div className={styles['detail-container']}>
-          <p>Loading...</p>
+           <ThreeDots
+                height="40"
+                width="40"
+                color="#3147cc"
+                visible={true}
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+              />
         </div>
       </>
     );

@@ -5,6 +5,7 @@ import { fetchCampers } from "../../store/Camper/operations.js";
 import Navigation from "../../components/Navigation/Navigation";
 import styles from "./CatalogPage.module.css";
 import { Icon } from "../../icon.jsx";
+import { ThreeDots } from "react-loader-spinner";
 
 const CatalogPage = () => {
   const dispatch = useDispatch();
@@ -69,7 +70,7 @@ const CatalogPage = () => {
               <Icon id="icon-Map" className={styles["location-icon"]} />
               <input
                 type="text"
-                placeholder="Kyiv, Ukraine"
+                placeholder="City"
                 className={styles["location-input"]}
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
@@ -188,7 +189,19 @@ const CatalogPage = () => {
               Load more
             </button>
           )}
-          {loading && <p className={styles.loading}>Loading...</p>}
+          {loading && (
+            <p className={styles.loading}>
+              <ThreeDots
+                height="40"
+                width="40"
+                color="#3147cc"
+                visible={true}
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+              />
+            </p>
+          )}
         </section>
       </main>
     </div>
