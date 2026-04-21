@@ -1,3 +1,7 @@
+.favorite {
+  fill: #e74c3c;
+  stroke: #e74c3c;
+}
 .catalog-container {
   display: flex;
   flex-direction: column;

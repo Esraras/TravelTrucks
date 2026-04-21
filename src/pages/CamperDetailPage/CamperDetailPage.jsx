@@ -1,23 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import Navigation from '../../components/Navigation/Navigation';
-import styles from './CamperDetailPage.module.css';
-import { fetchCamperById } from '../../store/Camper/operations.js';
-import { ThreeDots } from 'react-loader-spinner';
+import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import Navigation from "../../components/Navigation/Navigation";
+import styles from "./CamperDetailPage.module.css";
+import { fetchCamperById } from "../../store/Camper/operations.js";
+import { ThreeDots } from "react-loader-spinner";
+import toast from "../../toast";
 
 const CamperDetailPage = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { currentCamper, loading, error } = useSelector((state) => state.campers);
-  const [activeTab, setActiveTab] = useState('features');
+  const { currentCamper, loading, error } = useSelector(
+    (state) => state.campers,
+  );
+  const [activeTab, setActiveTab] = useState("features");
   const [formValues, setFormValues] = useState({
-    name: '',
-    email: '',
-    date: '',
-    comment: '',
+    name: "",
+    email: "",
+    date: "",
+    comment: "",
   });
-
+  const initialFormState = {
+    name: "",
+    email: "",
+    date: "",
+    comment: "",
+  };
   useEffect(() => {
     dispatch(fetchCamperById(id));
   }, [dispatch, id]);
@@ -29,23 +37,30 @@ const CamperDetailPage = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('Booking data', formValues);
+    if (!formValues.name || !formValues.email || !formValues.date) {
+      toast.error("Lütfen zorunlu alanları doldurun!");
+      return;
+    }
+    console.log("Booking data", formValues);
+
+    toast.success("Rezervasyon talebiniz başarıyla gönderildi!");
+    setFormValues(initialFormState);
   };
 
   if (loading) {
     return (
       <>
         <Navigation />
-        <div className={styles['detail-container']}>
-           <ThreeDots
-                height="40"
-                width="40"
-                color="#3147cc"
-                visible={true}
-                ariaLabel="three-dots-loading"
-                wrapperStyle={{}}
-                wrapperClass=""
-              />
+        <div className={styles["detail-container"]}>
+          <ThreeDots
+            height="40"
+            width="40"
+            color="#3147cc"
+            visible={true}
+            ariaLabel="three-dots-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+          />
         </div>
       </>
     );
@@ -55,9 +70,9 @@ const CamperDetailPage = () => {
     return (
       <>
         <Navigation />
-        <div className={styles['detail-container']}>
-          <p>{error || 'Camper not found'}</p>
-          <Link to="/catalog" className={styles['back-button']}>
+        <div className={styles["detail-container"]}>
+          <p>{error || "Camper not found"}</p>
+          <Link to="/catalog" className={styles["back-button"]}>
             Back to Catalog
           </Link>
         </div>
@@ -66,125 +81,140 @@ const CamperDetailPage = () => {
   }
 
   const camper = currentCamper;
-  const reviewsCount = Array.isArray(camper.reviews) ? camper.reviews.length : camper.reviews || 0;
+  const reviewsCount = Array.isArray(camper.reviews)
+    ? camper.reviews.length
+    : camper.reviews || 0;
   const featureTags = [];
 
-  if (camper.transmission?.toLowerCase() === 'automatic') featureTags.push('Automatic');
-  if (camper.AC) featureTags.push('AC');
-  if (camper.fuel?.toLowerCase() === 'petrol') featureTags.push('Petrol');
-  if (camper.kitchen) featureTags.push('Kitchen');
-  if (camper.TV) featureTags.push('TV');
-  if (camper.bathroom) featureTags.push('Bathroom');
-  if (camper.radio) featureTags.push('Radio');
+  if (camper.transmission?.toLowerCase() === "automatic")
+    featureTags.push("Automatic");
+  if (camper.AC) featureTags.push("AC");
+  if (camper.fuel?.toLowerCase() === "petrol") featureTags.push("Petrol");
+  if (camper.kitchen) featureTags.push("Kitchen");
+  if (camper.TV) featureTags.push("TV");
+  if (camper.bathroom) featureTags.push("Bathroom");
+  if (camper.radio) featureTags.push("Radio");
 
   const detailEntries = camper.details ? Object.entries(camper.details) : [];
 
   return (
     <>
       <Navigation />
-      <div className={styles['detail-container']}>
-        <div className={styles['detail-content']}>
-          <div className={styles['detail-header']}>
+      <div className={styles["detail-container"]}>
+        <div className={styles["detail-content"]}>
+          <div className={styles["detail-header"]}>
             <div>
-              <div className={styles['title-row']}>
+              <div className={styles["title-row"]}>
                 <h1>{camper.name}</h1>
                 <p className={styles.price}>€{camper.price}.00</p>
               </div>
-              <div className={styles['header-info']}>
-                <span className={styles.rating}>★ {camper.rating} ({reviewsCount} Reviews)</span>
+              <div className={styles["header-info"]}>
+                <span className={styles.rating}>
+                  ★ {camper.rating} ({reviewsCount} Reviews)
+                </span>
                 <span className={styles.location}>{camper.location}</span>
               </div>
             </div>
           </div>
 
-          <div className={styles['gallery-grid']}>
-            {Array.isArray(camper.gallery) && camper.gallery.slice(0, 4).map((img, idx) => (
-              <img
-                key={idx}
-                src={img.original}
-                alt={`${camper.name} ${idx + 1}`}
-                className={styles['gallery-image']}
-              />
-            ))}
+          <div className={styles["gallery-grid"]}>
+            {Array.isArray(camper.gallery) &&
+              camper.gallery
+                .slice(0, 4)
+                .map((img, idx) => (
+                  <img
+                    key={idx}
+                    src={img.original}
+                    alt={`${camper.name} ${idx + 1}`}
+                    className={styles["gallery-image"]}
+                  />
+                ))}
           </div>
 
           <p className={styles.description}>{camper.description}</p>
 
-          <div className={styles['detail-layout']}>
-            <section className={styles['detail-main']}>
+          <div className={styles["detail-layout"]}>
+            <section className={styles["detail-main"]}>
               <div className={styles.tabs}>
                 <button
                   type="button"
-                  className={`${styles['tab-button']} ${activeTab === 'features' ? styles.active : ''}`}
-                  onClick={() => setActiveTab('features')}
+                  className={`${styles["tab-button"]} ${activeTab === "features" ? styles.active : ""}`}
+                  onClick={() => setActiveTab("features")}
                 >
                   Features
                 </button>
                 <button
                   type="button"
-                  className={`${styles['tab-button']} ${activeTab === 'reviews' ? styles.active : ''}`}
-                  onClick={() => setActiveTab('reviews')}
+                  className={`${styles["tab-button"]} ${activeTab === "reviews" ? styles.active : ""}`}
+                  onClick={() => setActiveTab("reviews")}
                 >
                   Reviews
                 </button>
               </div>
 
-              {activeTab === 'features' ? (
+              {activeTab === "features" ? (
                 <>
-                  <div className={styles['feature-chips']}>
+                  <div className={styles["feature-chips"]}>
                     {featureTags.length > 0 ? (
                       featureTags.map((tag) => (
-                        <span key={tag} className={styles['feature-chip']}>
+                        <span key={tag} className={styles["feature-chip"]}>
                           {tag}
                         </span>
                       ))
                     ) : (
-                      <span className={styles['feature-chip']}>No feature data</span>
+                      <span className={styles["feature-chip"]}>
+                        No feature data
+                      </span>
                     )}
                   </div>
 
-                  <div className={styles['panel-box']}>
+                  <div className={styles["panel-box"]}>
                     <h2>Vehicle details</h2>
-                    <dl className={styles['details-list']}>
+                    <dl className={styles["details-list"]}>
                       {detailEntries.length > 0 ? (
                         detailEntries.map(([key, value]) => (
-                          <div key={key} className={styles['detail-row']}>
+                          <div key={key} className={styles["detail-row"]}>
                             <dt>{key}</dt>
                             <dd>{value}</dd>
                           </div>
                         ))
                       ) : (
-                        <p className={styles['empty-message']}>Details are not available.</p>
+                        <p className={styles["empty-message"]}>
+                          Details are not available.
+                        </p>
                       )}
                     </dl>
                   </div>
                 </>
               ) : (
-                <div className={styles['reviews-section']}>
-                  {Array.isArray(camper.reviews) && camper.reviews.length > 0 ? (
+                <div className={styles["reviews-section"]}>
+                  {Array.isArray(camper.reviews) &&
+                  camper.reviews.length > 0 ? (
                     camper.reviews.map((review, index) => (
-                      <article key={index} className={styles['review-item']}>
-                        <div className={styles['review-meta']}>
-                          <span>{review.user || 'Guest'}</span>
+                      <article key={index} className={styles["review-item"]}>
+                        <div className={styles["review-meta"]}>
+                          <span>{review.user || "Guest"}</span>
                           <span>{review.rating || camper.rating} ★</span>
                         </div>
-                        <p className={styles['review-text']}>{review.comment || review}</p>
+                        <p className={styles["review-text"]}>
+                          {review.comment || review}
+                        </p>
                       </article>
                     ))
                   ) : (
-                    <p className={styles['empty-message']}>No reviews yet.</p>
+                    <p className={styles["empty-message"]}>No reviews yet.</p>
                   )}
                 </div>
               )}
             </section>
 
-            <aside className={styles['booking-panel']}>
-              <div className={styles['booking-header']}>
+            <aside className={styles["booking-panel"]}>
+              <div className={styles["booking-header"]}>
                 <h2>Book your campervan now</h2>
                 <p>Stay connected! We are always ready to help you.</p>
               </div>
-              <form className={styles['booking-form']} onSubmit={handleSubmit}>
-                <label className={styles['form-field']}>
+              <form className={styles["booking-form"]} onSubmit={handleSubmit}>
+                <label className={styles["form-field"]}>
                   Name*
                   <input
                     type="text"
@@ -192,9 +222,10 @@ const CamperDetailPage = () => {
                     value={formValues.name}
                     onChange={handleInputChange}
                     placeholder="Your name"
+                    required
                   />
                 </label>
-                <label className={styles['form-field']}>
+                <label className={styles["form-field"]}>
                   Email*
                   <input
                     type="email"
@@ -202,18 +233,20 @@ const CamperDetailPage = () => {
                     value={formValues.email}
                     onChange={handleInputChange}
                     placeholder="you@example.com"
+                    required
                   />
                 </label>
-                <label className={styles['form-field']}>
+                <label className={styles["form-field"]}>
                   Booking date*
                   <input
                     type="date"
                     name="date"
                     value={formValues.date}
                     onChange={handleInputChange}
+                    required
                   />
                 </label>
-                <label className={styles['form-field']}>
+                <label className={styles["form-field"]}>
                   Comment
                   <textarea
                     name="comment"
@@ -222,7 +255,7 @@ const CamperDetailPage = () => {
                     placeholder="Your message"
                   />
                 </label>
-                <button className={styles['submit-button']} type="submit">
+                <button className={styles["submit-button"]} type="submit">
                   Send
                 </button>
               </form>

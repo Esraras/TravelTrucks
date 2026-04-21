@@ -29,6 +29,7 @@ const campersSlice = createSlice({
         type: [],
       };
       state.currentPage = 1;
+      state.total = 0;
     },
     clearError: (state) => {
       state.error = null;

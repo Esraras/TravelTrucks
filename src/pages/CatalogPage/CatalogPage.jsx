@@ -1,12 +1,24 @@
 import React, { useState, useEffect, useCallback } from "react";
+import toast from "../../toast";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCampers } from "../../store/Camper/operations.js";
+import { clearFilters } from "../../store/Camper/slice.js";
 import Navigation from "../../components/Navigation/Navigation";
 import styles from "./CatalogPage.module.css";
 import { Icon } from "../../icon.jsx";
 import { ThreeDots } from "react-loader-spinner";
 
+const getFavorites = () => {
+  try {
+    return JSON.parse(localStorage.getItem("favorites")) || [];
+  } catch {
+    return [];
+  }
+};
+const setFavorites = (fav) => {
+  localStorage.setItem("favorites", JSON.stringify(fav));
+};
 const CatalogPage = () => {
   const dispatch = useDispatch();
   const { items, total, loading, error } = useSelector(
@@ -18,23 +30,50 @@ const CatalogPage = () => {
   const [equipment, setEquipment] = useState([]);
   const [vehicleType, setVehicleType] = useState("");
 
+  const [favorites, setFavoritesState] = useState(getFavorites());
   const limit = 4;
+
+  const handleFavorite = (id) => {
+    let newFavs;
+    if (favorites.includes(id)) {
+      newFavs = favorites.filter((fid) => fid !== id);
+      toast.info("Favorilerden çıkarıldı");
+    } else {
+      newFavs = [...favorites, id];
+      toast.success("Favorilere eklendi!");
+    }
+    setFavorites(newFavs);
+    setFavoritesState(newFavs);
+  };
 
   const getActiveFilters = useCallback(() => {
     const filters = {};
+    if (location.trim()) filters.location = location;
     if (location) filters.location = location;
-    if (vehicleType) filters.vehicleType = vehicleType;
+    //if (vehicleType) filters.vehicleType = vehicleType;
+    if (vehicleType) {
+      const typeMap = {
+        Van: "van",
+        "Fully Integrated": "fullyIntegrated",
+        Alcove: "alcove",
+      };
+      filters.vehicleType = typeMap[vehicleType] || vehicleType;
+    }
     if (equipment.length) filters.equipment = equipment;
+    equipment.forEach((item) => {
+      filters[item.toLowerCase()] = true;
+    });
     return filters;
   }, [location, vehicleType, equipment]);
 
   useEffect(() => {
     const filters = getActiveFilters();
     dispatch(fetchCampers({ page, limit, filters }));
-  }, [dispatch, page, getActiveFilters]);
+  }, [dispatch, page]);
 
   const handleSearch = () => {
     setPage(1);
+    dispatch(clearFilters());
     const filters = getActiveFilters();
     dispatch(fetchCampers({ page: 1, limit, filters }));
   };
@@ -47,14 +86,16 @@ const CatalogPage = () => {
     );
   };
   const iconMap = {
-    AC: <Icon id="icon-wind" className={styles["filter-icon"]}/>,
-    Automatic: <Icon id="icon-diagram" className={styles["filter-icon"]}/>,
-    Kitchen: <Icon id="icon-cup-hot" className={styles["filter-icon"]}/>,
-    TV: <Icon id="icon-tv" className={styles["filter-icon"]}/>,
-    Bathroom: <Icon id="icon-ph-shower" className={styles["filter-icon"]}/>,
-    Van: <Icon id="icon-bi_grid-1" className={styles["filter-icon"]}/>,
-    "Fully Integrated": <Icon id="icon-bi_grid" className={styles["filter-icon"]}/>,
-    Alcove: <Icon id="icon-bi_grid-3" className={styles["filter-icon"]}/>
+    AC: <Icon id="icon-wind" className={styles["filter-icon"]} />,
+    Automatic: <Icon id="icon-diagram" className={styles["filter-icon"]} />,
+    Kitchen: <Icon id="icon-cup-hot" className={styles["filter-icon"]} />,
+    TV: <Icon id="icon-tv" className={styles["filter-icon"]} />,
+    Bathroom: <Icon id="icon-ph-shower" className={styles["filter-icon"]} />,
+    Van: <Icon id="icon-bi_grid-1" className={styles["filter-icon"]} />,
+    "Fully Integrated": (
+      <Icon id="icon-bi_grid" className={styles["filter-icon"]} />
+    ),
+    Alcove: <Icon id="icon-bi_grid-3" className={styles["filter-icon"]} />,
   };
   const hasMore = items.length < total;
 
@@ -91,9 +132,7 @@ const CatalogPage = () => {
                   }`}
                   onClick={() => toggleEquipment(item)}
                 >
-                  <span className={styles["filter-icon"]}>
-                    {iconMap[item]}
-                  </span>
+                  <span className={styles["filter-icon"]}>{iconMap[item]}</span>
                   {item}
                 </button>
               ))}
@@ -112,9 +151,7 @@ const CatalogPage = () => {
                     setVehicleType(vehicleType === type ? "" : type)
                   }
                 >
-                  <span className={styles["filter-icon"]}>
-                    {iconMap[type]}
-                  </span>
+                  <span className={styles["filter-icon"]}>{iconMap[type]}</span>
                   {type}
                 </button>
               ))}
@@ -140,8 +177,26 @@ const CatalogPage = () => {
                 <div className={styles["camper-details"]}>
                   <div className={styles["card-header"]}>
                     <h2>{camper.name}</h2>
-                    <p className={styles.price}>€{camper.price}.00
-                      <Icon id="icon-heart" className={styles["location-icon"]} />
+                    <p className={styles.price}>
+                      €{camper.price}.00
+                      <span
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleFavorite(camper.id)}
+                        title={
+                          favorites.includes(camper.id)
+                            ? "Favorilerden çıkar"
+                            : "Favorilere ekle"
+                        }
+                      >
+                        <Icon
+                          id="icon-heart"
+                          className={
+                            favorites.includes(camper.id)
+                              ? `${styles["location-icon"]} ${styles["favorite"]}`
+                              : styles["location-icon"]
+                          }
+                        />
+                      </span>
                     </p>
                   </div>
                   <div className={styles["card-info"]}>
@@ -181,7 +236,7 @@ const CatalogPage = () => {
 
           {error && <p className={styles.error}>Error: {error}</p>}
 
-          {hasMore && !loading && (
+          {hasMore && !loading && items.length > 0 && (
             <button
               className={styles["load-more-btn"]}
               onClick={() => setPage((p) => p + 1)}
